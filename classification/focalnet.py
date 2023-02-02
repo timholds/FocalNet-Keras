@@ -507,7 +507,7 @@ class FocalNet(nn.Module):
         # print('done layers forward_features {}'.format(x.shape))
 
         x = torch.flatten(x, 1)
-        print('flatten to shape {}'.format(x.size))
+        print('flatten to shape {}'.format(x.size()))
         return x
 
     def forward(self, x):
