@@ -496,13 +496,13 @@ class FocalNet(nn.Module):
         for layer in self.layers:
             x, H, W = layer(x, H, W)
 
-        print('self.layers run in forward_features, shape: {}'.format(x.size))
+        print('self.layers run in forward_features, shape: {}'.format(x.size()))
         x = self.norm(x)  # B L C
-        print('ran norm layer forward_features {}'.format(x.size))
+        print('ran norm layer forward_features {}'.format(x.size()))
         x = x.transpose(1, 2) # B C L
-        print('transposed in forward_features {}'.format(x.size))
+        print('transposed in forward_features {}'.format(x.size()))
         x = self.avgpool(x)  # B C 1
-        print('avgpooled in forward_features {}'.format(x.size))
+        print('avgpooled in forward_features {}'.format(x.size()))
 
         # print('done layers forward_features {}'.format(x.shape))
 
