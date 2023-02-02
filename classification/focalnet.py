@@ -495,8 +495,17 @@ class FocalNet(nn.Module):
 
         for layer in self.layers:
             x, H, W = layer(x, H, W)
+
+        print('self.layers run in forward_features, shape: {}'.format(x.shape))
         x = self.norm(x)  # B L C
-        x = self.avgpool(x.transpose(1, 2))  # B C 1
+        print('ran norm layer forward_features {}'.format(x.shape))
+        x = x.transpose(1, 2) # B C L
+        print('transposed in forward_features {}'.format(x.shape))
+        x = self.avgpool(x)  # B C 1
+        print('avgpooled in forward_features {}'.format(x.shape))
+
+        # print('done layers forward_features {}'.format(x.shape))
+
         x = torch.flatten(x, 1)
         return x
 
