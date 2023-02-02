@@ -499,23 +499,23 @@ class FocalNet(nn.Module):
         # print('self.layers run in forward_features, shape: {}'.format(x.size()))
         x = self.norm(x)  # B L C
         # print('ran norm layer forward_features {}'.format(x.size()))
-        x = x.transpose(2, 1) # B C L
+        x = x.transpose(2, 1) # B C L -> (100, 96, 49)
         # print('transposed in forward_features {}'.format(x.size()))
-        x = self.avgpool(x)  # B C 1
+        x = self.avgpool(x)  # B C 1 -> (100, 96, 1)
         # print('avgpooled in forward_features {}'.format(x.size()))
 
         # print('done layers forward_features {}'.format(x.shape))
 
-        x = torch.flatten(x, 1)
+        x = torch.flatten(x, 1) # B, C -> (100, 96)
         # print('flatten to shape {}'.format(x.size()))
         return x
 
     def forward(self, x):
-        print('about to run forward_features {}'.format(x.size()))
-        x = self.forward_features(x)
-        print('ran forward_features {}'.format(x.size()))
+        # print('about to run forward_features {}'.format(x.size())) # B, C, H, W  -> 100, 1, 28, 28
+        x = self.forward_features(x) 
+        # print('ran forward_features {}'.format(x.size())) # B, 96 -> 100, 96
         x = self.head(x)
-        print('ran head on x: {}'.format(x.size()))
+        # print('ran head on x: {}'.format(x.size())) # B, 10  -> 100, 10
 
         return x
 
@@ -714,7 +714,9 @@ if __name__ == '__main__':
     x = torch.rand(16, 3, img_size, img_size).cuda()
     # model = FocalNet(depths=[2, 2, 6, 2], embed_dim=96)
     # model = FocalNet(depths=[12], patch_size=16, embed_dim=768, focal_levels=[3], focal_windows=[3], focal_factors=[2])
-    model = FocalNet(depths=[2, 2, 6, 2], embed_dim=96, focal_levels=[3, 3, 3, 3]).cuda()
+    # model = FocalNet(depths=[2, 2, 6, 2], embed_dim=96, focal_levels=[3, 3, 3, 3]).cuda()
+    model = FocalNet(img_size=28, patch_size=4, in_chans=1, num_classes=10, depths=[3], focal_levels=[4,4,4,4], focal_windows=[3,3,3,3]).cuda()
+
     print(model); 
     model(x)
 
