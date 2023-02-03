@@ -76,9 +76,12 @@ class FocalModulation(nn.Module):
         C = x.shape[-1]
 
         # pre linear projection
+        print('before prelinear projection {}'.format(x.size()))
         x = self.f(x).permute(0, 3, 1, 2).contiguous()
+        print('after prelinear projection {}'.format(x.size()))
         q, ctx, self.gates = torch.split(x, (C, C, self.focal_level+1), 1)
-        
+        print('after splitting into gates, q: {}, ctx: {}, self.gates{}'.format(q.size(), ctx.size(), self.gates.size()))
+  
         # context aggreation
         ctx_all = 0 
         for l in range(self.focal_level):         
